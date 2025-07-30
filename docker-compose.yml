@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  # Development environment with live reload
+  codelabs-dev:
+    image: shinyay/claat
+    container_name: codelabs-dev
+    ports:
+      - "9090:9090"
+    volumes:
+      - .:/app
+    working_dir: /app
+    command: serve -addr 0.0.0.0:9090 -codelabs-dir dist
+    depends_on:
+      - export-tutorials
+
+  # Tutorial export service
+  export-tutorials:
+    image: shinyay/claat
+    container_name: codelabs-export
+    volumes:
+      - .:/app
+    working_dir: /app
+    command: sh -c "find docs -name '*.md' -exec claat export -o dist {} +"
+
+  # Production nginx server
+  codelabs-prod:
+    build: .
+    container_name: codelabs-prod
+    ports:
+      - "8080:8080"
+    environment:
+      - PORT=8080
+    profiles:
+      - production
+
+  # Tutorial builder
+  builder:
+    image: shinyay/claat
+    container_name: codelabs-builder
+    volumes:
+      - .:/app
+    working_dir: /app
+    profiles:
+      - build
+
+networks:
+  default:
+    name: codelabs-network
