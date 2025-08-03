@@ -1,0 +1,63 @@
+# Sample Tutorial Configuration
+# Use this file as a template for creating new tutorials
+
+# Tutorial Metadata
+tutorial:
+  id: "sample-tutorial"
+  title: "Sample Tutorial Title"
+  summary: "Brief description of what this tutorial covers"
+  categories: ["tutorial", "getting-started"]
+  tags: ["codelabs", "tutorial", "template"]
+  status: "Published"  # Draft, Published, Hidden
+  authors: ["Your Name"]
+  feedback_link: "https://github.com/your-repo/issues"
+  
+  # Timing and difficulty
+  duration: 30  # minutes
+  difficulty: "Beginner"  # Beginner, Intermediate, Advanced
+  
+  # Prerequisites
+  prerequisites:
+    - "Basic knowledge of Markdown"
+    - "Text editor or IDE"
+    - "Git (optional)"
+
+# Content Structure
+sections:
+  - title: "Overview"
+    duration: 5
+    content_type: "overview"
+    includes:
+      - "Learning objectives"
+      - "Prerequisites"
+      - "What you'll build"
+  
+  - title: "Setup"
+    duration: 10
+    content_type: "setup"
+    includes:
+      - "Environment setup"
+      - "Tool installation"
+      - "Project initialization"
+  
+  - title: "Implementation"
+    duration: 15
+    content_type: "hands-on"
+    includes:
+      - "Step-by-step coding"
+      - "Code explanations"
+      - "Best practices"
+
+# Publishing Options
+publishing:
+  github_pages: true
+  docker: true
+  cloud_run: false
+  app_engine: false
+
+# Automation Settings
+automation:
+  auto_export: true
+  auto_deploy: true
+  validate_links: true
+  spell_check: false
