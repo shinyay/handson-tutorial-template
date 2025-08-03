@@ -38,13 +38,15 @@ RUN curl -fsSL https://deb.nodesource.com/setup_${NODE_VERSION}.x | bash - \
 ENV PATH="/usr/local/go/bin:${PATH}"
 ENV GOPATH="/go"
 ENV GOBIN="/go/bin"
-ENV PATH="${GOBIN}:${PATH}"
 
-# Create Go directories
-RUN mkdir -p /go/src /go/bin /go/pkg
+# Create Go directories with proper ownership
+RUN mkdir -p /go/src /go/bin /go/pkg && chown -R vscode:vscode /go
 
 # Install claat CLI tool
 RUN go install github.com/googlecodelabs/tools/claat@${CLAAT_VERSION}
+
+# Update PATH to include Go bin
+ENV PATH="${GOBIN}:${PATH}"
 
 # Install useful global npm packages for markdown/documentation work
 RUN npm install -g \
@@ -87,17 +89,22 @@ RUN mkdir -p /commandhistory \
 # Set ownership
 RUN chown -R vscode:vscode /go /workspace /home/vscode
 
-# Switch to vscode user
+# Switch to vscode user for final setup
 USER vscode
+
+# Ensure PATH is set in user profile
+RUN echo 'export PATH="/go/bin:/usr/local/go/bin:$PATH"' >> /home/vscode/.bashrc \
+    && echo 'export GOPATH="/go"' >> /home/vscode/.bashrc \
+    && echo 'export GOBIN="/go/bin"' >> /home/vscode/.bashrc
 
 # Set working directory
 WORKDIR /workspace
 
-# Verify installations
+# Verify installations as vscode user
 RUN go version \
     && node --version \
     && npm --version \
-    && claat version
+    && /go/bin/claat version
 
 # Default command
 CMD ["sleep", "infinity"]
